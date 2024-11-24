@@ -299,8 +299,8 @@ end)
 
 createButton("Creds(Console)", UDim2.new(0.5, -175, 0, 280), function()
     print("discord: prohaxorniga")
-print("thisu script was 89% ai since i changed some stuff like the aimbots FOV since the fov is broken and doesnt circle around your cursor so it looks retarded with fov on")
-print("the ONLY reason this is open source is cuz ik retarded white rich kids would js say "RATTT!!!!" like the cornballs they are")
+    warn("open source so yall dont say its a rat")
+    print("thank you mistral.ai for helping me make this and yes all of this was 95% ai")
 
 createButton("Soon", UDim2.new(0.5, -175, 0, 350), function()
     print("Button 5 clicked!")
