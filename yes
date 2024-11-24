@@ -297,10 +297,12 @@ spawn(checkParts)
 
 end)
 
-createButton("Creds in console", UDim2.new(0.5, -175, 0, 280), function()
-    print("discord: prohaxorniga")
-    warn("open source so yall dont say its a rat")
-    print("thank you mistral.ai for helping me make this and yes all of this was 95% ai")
+createButton("Soon", UDim2.new(0.5, -175, 0, 280), function()
+ print("Button 6 clicked!")
+    -- Add your custom script here
+end)
+
+
 
 createButton("Soon", UDim2.new(0.5, -175, 0, 350), function()
     print("Button 5 clicked!")
