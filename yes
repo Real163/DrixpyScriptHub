@@ -297,7 +297,7 @@ spawn(checkParts)
 
 end)
 
-createButton("Creds(Console)", UDim2.new(0.5, -175, 0, 280), function()
+createButton("Creds in console", UDim2.new(0.5, -175, 0, 280), function()
     print("discord: prohaxorniga")
     warn("open source so yall dont say its a rat")
     print("thank you mistral.ai for helping me make this and yes all of this was 95% ai")
