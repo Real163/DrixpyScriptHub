@@ -1,0 +1,308 @@
+-- Create the ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ButtonGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create the Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 500) -- Wider size
+frame.Position = UDim2.new(0.5, -200, 0.5, -250) -- Center the frame
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Black background
+frame.BorderSizePixel = 0
+frame.Active = true -- Make the frame draggable
+frame.Draggable = true
+frame.Parent = screenGui
+
+-- Create the UICorner for the Frame
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 10)
+uiCorner.Parent = frame
+
+-- Create the Label
+local label = Instance.new("TextLabel")
+label.Size = UDim2.new(1, 0, 0, 50) -- Full width, fixed height
+label.Position = UDim2.new(0, 0, 0, 0) -- Top of the frame
+label.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red background
+label.BorderSizePixel = 0
+label.Text = "Drixpy Script Hub"
+label.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text
+label.Font = Enum.Font.SourceSansBold
+label.TextSize = 28
+label.Parent = frame
+
+-- Create the UICorner for the Label
+local labelUiCorner = Instance.new("UICorner")
+labelUiCorner.CornerRadius = UDim.new(0, 10)
+labelUiCorner.Parent = label
+
+-- Function to create a button
+local function createButton(text, position, clickFunction)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 350, 0, 60) -- Wider size
+    button.Position = position
+    button.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red background
+    button.BorderSizePixel = 0
+    button.Text = text
+    button.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text
+    button.Font = Enum.Font.SourceSansBold
+    button.TextSize = 24
+
+    -- Create the UICorner for the Button
+    local uiCorner = Instance.new("UICorner")
+    uiCorner.CornerRadius = UDim.new(0, 10)
+    uiCorner.Parent = button
+
+    button.Parent = frame
+
+    -- Add click functionality
+    button.MouseButton1Click:Connect(clickFunction)
+end
+
+-- Create 5 buttons with custom click functions
+createButton("ESP", UDim2.new(0.5, -175, 0, 70), function()
+    print("ESP Enabled")
+    -- Services
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+
+-- Create a table to store the ESP boxes
+local espBoxes = {}
+
+-- Function to create an ESP box
+local function createESPBox(player)
+    local box = Drawing.new("Square")
+    box.Visible = false
+    box.Color = Color3.fromRGB(255, 0, 0) -- Red color
+    box.Thickness = 2
+    box.ZIndex = 1
+
+    espBoxes[player] = box
+end
+
+-- Function to update the ESP box position and size
+local function updateESPBox(player)
+    local character = player.Character
+    if not character then return end
+
+    local box = espBoxes[player]
+    if not box then return end
+
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    local _, onScreen = Camera:WorldToViewportPoint(rootPart.Position)
+    if onScreen then
+        local top = character:FindFirstChild("Head")
+        local bottom = character:FindFirstChild("HumanoidRootPart")
+        if top and bottom then
+            local topPos, topVisible = Camera:WorldToViewportPoint(top.Position)
+            local bottomPos, bottomVisible = Camera:WorldToViewportPoint(bottom.Position)
+            if topVisible and bottomVisible then
+                local size = Vector2.new(2000 / rootPart.Position.Y, (topPos.Y - bottomPos.Y))
+                box.Size = size
+                box.Position = Vector2.new(topPos.X - size.X / 2, bottomPos.Y)
+                box.Visible = true
+            else
+                box.Visible = false
+            end
+        else
+            box.Visible = false
+        end
+    else
+        box.Visible = false
+    end
+end
+
+-- Function to remove the ESP box
+local function removeESPBox(player)
+    if espBoxes[player] then
+        espBoxes[player]:Remove()
+        espBoxes[player] = nil
+    end
+end
+
+-- Connect player added and removed events
+Players.PlayerAdded:Connect(function(player)
+    createESPBox(player)
+    player.CharacterAdded:Connect(function(character)
+        createESPBox(player)
+    end)
+    player.CharacterRemoving:Connect(function(character)
+        removeESPBox(player)
+    end)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    removeESPBox(player)
+end)
+
+-- Update ESP boxes every frame
+RunService.RenderStepped:Connect(function()
+    for _, player in ipairs(Players:GetPlayers()) do
+        updateESPBox(player)
+    end
+end)
+
+-- Initialize ESP boxes for existing players
+for _, player in ipairs(Players:GetPlayers()) do
+    createESPBox(player)
+end
+
+end)
+
+createButton("Aimbot(E)", UDim2.new(0.5, -175, 0, 140), function()
+    print("Aimbot Enabled Button is E also if your playing bridge duels go in 3rd person")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local Drawing = Drawing.new("Circle")
+
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+local isKeyDown = false
+local targetPlayer = nil
+
+-- Drawing FOV indicator
+Drawing.Color = Color3.new(1, 0, 0) -- Red color
+Drawing.Thickness = 2
+Drawing.NumSides = 100
+Drawing.Radius = 100 -- Adjust the radius as needed
+Drawing.Visible = false
+
+local function onKeyPress(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.E then
+        isKeyDown = true
+    end
+end
+
+local function onKeyRelease(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.E then
+        isKeyDown = false
+        targetPlayer = nil
+    end
+end
+
+local function getPlayerInFOV()
+    local characters = {}
+    for _, p in pairs(Players:GetPlayers()) do
+        if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
+            table.insert(characters, p.Character.Head)
+        end
+    end
+
+    local closestCharacter = nil
+    local shortestDistance = math.huge
+
+    for _, character in ipairs(characters) do
+        local screenPoint = Camera:WorldToViewportPoint(character.Position)
+        local distance = (Vector2.new(screenPoint.X, screenPoint.Y) - Vector2.new(mouse.X, mouse.Y)).Magnitude
+        if distance < shortestDistance then
+            shortestDistance = distance
+            closestCharacter = character
+        end
+    end
+
+    return closestCharacter
+end
+
+UserInputService.InputBegan:Connect(onKeyPress)
+UserInputService.InputEnded:Connect(onKeyRelease)
+
+RunService.RenderStepped:Connect(function()
+    -- Update FOV indicator position
+    Drawing.Position = Vector2.new(mouse.X - Drawing.Radius, mouse.Y - Drawing.Radius)
+
+    if isKeyDown then
+        if not targetPlayer then
+            targetPlayer = getPlayerInFOV()
+        end
+        if targetPlayer then
+            local targetPosition = targetPlayer.Position
+            local cameraPosition = player.Character.Head.Position
+            Camera.CFrame = CFrame.new(cameraPosition, targetPosition)
+
+            -- Rotate the player's body to face the target
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local lookVector = (targetPosition - player.Character.HumanoidRootPart.Position).unit
+                player.Character.HumanoidRootPart.CFrame = CFrame.new(player.Character.HumanoidRootPart.Position, player.Character.HumanoidRootPart.Position + lookVector)
+            end
+        end
+    else
+        if player.Character and player.Character:FindFirstChild("Head") then
+            Camera.CameraSubject = player.Character.Head
+        end
+    end
+end)
+end)
+
+createButton("Fly(Q)", UDim2.new(0.5, -175, 0, 210), function()
+    print("Fly Enabled(Hold Q to fly)")
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+local isKeyPressed = false
+local parts = {}
+
+local function onKeyPress(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.Q then
+        isKeyPressed = true
+        while isKeyPressed do
+            local part = Instance.new("Part")
+            part.Size = Vector3.new(4, 1, 4) -- Size of the part
+            part.Anchored = true
+            part.CanCollide = true
+            part.CFrame = rootPart.CFrame * CFrame.new(0, -3, 0) -- Position the part under the player's feet
+            part.Parent = workspace
+            table.insert(parts, part)
+            wait(0.1) -- Adjust the wait time as needed
+        end
+    end
+end
+
+local function onKeyRelease(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.Q then
+        isKeyPressed = false
+    end
+end
+
+local function checkParts()
+    while true do
+        for i, part in ipairs(parts) do
+            if not part or not part:IsDescendantOf(workspace) then
+                table.remove(parts, i)
+            elseif (rootPart.Position - part.Position).Magnitude > 5 then
+                part:Destroy()
+                table.remove(parts, i)
+            end
+        end
+        wait(0.5) -- Adjust the wait time as needed
+    end
+end
+
+UserInputService.InputBegan:Connect(onKeyPress)
+UserInputService.InputEnded:Connect(onKeyRelease)
+
+spawn(checkParts)
+
+end)
+
+createButton("Creds(Console)", UDim2.new(0.5, -175, 0, 280), function()
+    print("discord: prohaxorniga")
+print("thisu script was 89% ai since i changed some stuff like the aimbots FOV since the fov is broken and doesnt circle around your cursor so it looks retarded with fov on")
+print("the ONLY reason this is open source is cuz ik retarded white rich kids would js say "RATTT!!!!" like the cornballs they are")
+
+createButton("Soon", UDim2.new(0.5, -175, 0, 350), function()
+    print("Button 5 clicked!")
+    -- Add your custom script here
+end)
